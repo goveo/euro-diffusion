@@ -13,12 +13,12 @@ class GridDictionary {
         return `${p[0]}-${p[1]}`;
     }
 
-    public set(p: CoordsTuple, value: City) {
+    set(p: CoordsTuple, value: City) {
         const key = this.key(p);
         this.map.set(key, value);
     }
 
-    public get(p: CoordsTuple) {
+    get(p: CoordsTuple) {
         const key = this.key(p);
         return this.map.get(key);
     }
