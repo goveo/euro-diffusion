@@ -40,8 +40,8 @@ export class City {
             if (coinCount >= this.representativePortion) {
                 const share = Math.floor(coinCount / this.representativePortion);
 
-                this.neighbors.forEach((city, cityIndex) => {
-                    this.neighbors[cityIndex].cache[index] += share;
+                this.neighbors.forEach((city) => {
+                    city.cache[index] += share;
                     this.coins[index] -= share;
                 });
             }
