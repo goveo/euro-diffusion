@@ -12,15 +12,20 @@ export class Country {
     name: string;
     coordinates: CountryCoordinates;
     static MAX_COORDINATE = 10;
+    static NAME_MAX_LENGTH = 25;
 
     /**
      * Create a Country
      * @param {string} name - Name of country
      * @throws Will throw an error if country have invalid coordinates
+     * @throws Will throw an error if name length is bigger then NAME_MAX_LENGTH
      */
     constructor(name: string, coordinates: CountryCoordinates) {
         if (!Country.areCoordinatesValid(coordinates)) {
             throw new Error('Coordinates are invalid');
+        }
+        if (name.length > Country.NAME_MAX_LENGTH) {
+            throw new Error(`Name must be less than ${Country.NAME_MAX_LENGTH} characters`);
         }
         this.cities = [];
         this.name = name;
@@ -72,11 +77,6 @@ export class Country {
      */
     static parseCountryString(countryString: string): Country {
         const [name, ...coordinates] = countryString.split(' ');
-
-        if (name.length > 25) {
-            throw new Error('Name must be less than 25 characters');
-        }
-
         const [xl, yl, xh, yh] = coordinates.map((coordinate) => parseInt(coordinate) - 1);
         return new Country(name, { xl, yl, xh, yh } as CountryCoordinates);
     }
