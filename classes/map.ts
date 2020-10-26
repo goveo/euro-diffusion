@@ -1,6 +1,9 @@
 import City from './city';
 import Country from './country';
 
+export const INITIAL_COINS_COUNT = 1000000;
+export const REPRESENTATIVE_PORTION = INITIAL_COINS_COUNT / 1000;
+
 type CoordsTuple = [x: number, y: number];
 
 class GridDictionary {
@@ -74,7 +77,7 @@ export class MapGrid {
                 for (let j = 0; j < country.coordinates.yh - country.coordinates.yl + 1; j++) {
                     const x = country.coordinates.xl + i;
                     const y = country.coordinates.yl + j;
-                    const city = new City(countryCount, countryIndex);
+                    const city = new City(countryCount, countryIndex, INITIAL_COINS_COUNT, REPRESENTATIVE_PORTION);
                     this.countriesGrid.set([x, y], city);
                     this.countries[countryIndex].addCity(city);
                 }

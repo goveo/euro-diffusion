@@ -14,8 +14,8 @@ export class City {
      */
     constructor(coinTypesNumber: number,
         countryIndex: number,
-        initialCoinsCount = 1000000,
-        representativePortion: number = initialCoinsCount / 1000,
+        initialCoinsCount: number,
+        representativePortion: number,
     ) {
         this.completed = false;
         this.neighbors = [];
