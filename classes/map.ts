@@ -140,7 +140,7 @@ export class MapGrid {
                 });
 
                 if (country.isCompleted()) {
-                    if (result.get(country.name) === undefined) {
+                    if (!result.has(country.name)) {
                         result.set(country.name, days);
                     }
                 }
@@ -153,6 +153,14 @@ export class MapGrid {
             });
             days += 1;
         } while (!this.isCompleted());
+
+        // check if result have all countries
+        this.countries.forEach((country) => {
+            if (!result.has(country.name)) {
+                result.set(country.name, days);
+            }
+        });
+
         return result;
     }
 }

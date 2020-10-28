@@ -67,7 +67,7 @@ export class Country {
      * @returns {boolean} Flag that shows is diffusion completed in country
      */
     isCompleted(): boolean {
-        return this.cities.every((city) => city.completed);
+        return this.cities.every((city) => city.isCompleted());
     }
 
     /**

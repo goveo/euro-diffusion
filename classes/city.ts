@@ -1,5 +1,4 @@
 export class City {
-    completed: boolean;
     coinTypesNumber: number;
     neighbors: City[];
     coins: number[];
@@ -14,10 +13,9 @@ export class City {
      */
     constructor(coinTypesNumber: number,
         countryIndex: number,
-        initialCoinsCount: number,
-        representativePortion: number,
+        initialCoinsCount = 1000000,
+        representativePortion: number = initialCoinsCount / 1000,
     ) {
-        this.completed = false;
         this.neighbors = [];
         this.coinTypesNumber = coinTypesNumber;
 
@@ -29,22 +27,23 @@ export class City {
     }
 
     /**
+     * Checks if city have coins of each motif
+     * @returns {boolean}
+     */
+    isCompleted(): boolean {
+        return this.coins.every((coin) => coin > 0);
+    }
+
+    /**
      * Transport coins to neighbors
      */
     transportCoinsToNeighbors(): void {
-        if (this.coins.every((coin) => coin > 0)) {
-            this.completed = true;
-        }
-
         this.coins.forEach((coinCount, index) => {
-            if (coinCount >= this.representativePortion) {
-                const share = Math.floor(coinCount / this.representativePortion);
-
-                this.neighbors.forEach((city) => {
-                    city.cache[index] += share;
-                    this.coins[index] -= share;
-                });
-            }
+            const share = Math.floor(coinCount / this.representativePortion);
+            this.neighbors.forEach((city) => {
+                city.cache[index] += share;
+                this.coins[index] -= share;
+            });
         });
     }
 
