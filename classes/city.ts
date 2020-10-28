@@ -1,5 +1,6 @@
 export class City {
-    coinTypesNumber: number;
+    coinTypes: string[];
+    countryName: string;
     neighbors: City[];
     coins: number[];
     cache: number[];
@@ -7,20 +8,24 @@ export class City {
 
     /**
      * Create a City
-     * @param {number} coinTypesNumber - number of possible coin types
+     * @param {string[]} coinTypes - type of available coins
+     * @param {string} countryName
      * @param {number} initialCoinsCount
      * @param {number} representativePortion
      */
-    constructor(coinTypesNumber: number,
-        countryIndex: number,
+    constructor(coinTypes: string[],
+        countryName: string,
         initialCoinsCount = 1000000,
         representativePortion: number = initialCoinsCount / 1000,
     ) {
+        this.countryName = countryName;
+        this.coinTypes = coinTypes;
         this.neighbors = [];
-        this.coinTypesNumber = coinTypesNumber;
 
-        this.coins = new Array(coinTypesNumber).fill(0);
-        this.cache = new Array(coinTypesNumber).fill(0);
+        this.coins = new Array(coinTypes.length).fill(0);
+        this.cache = new Array(coinTypes.length).fill(0);
+
+        const countryIndex = this.coinTypes.indexOf(this.countryName);
 
         this.coins[countryIndex] = initialCoinsCount;
         this.representativePortion = representativePortion;
@@ -51,9 +56,9 @@ export class City {
      * Update coins number
      */
     updateCoins(): void {
-        for (let coinType = 0; coinType < this.coinTypesNumber; coinType++) {
-            this.coins[coinType] += this.cache[coinType];
-            this.cache[coinType] = 0;
+        for (let coinTypeIndex = 0; coinTypeIndex < this.coinTypes.length; coinTypeIndex++) {
+            this.coins[coinTypeIndex] += this.cache[coinTypeIndex];
+            this.cache[coinTypeIndex] = 0;
         }
     }
 }

@@ -17,6 +17,7 @@ export class Country {
     /**
      * Create a Country
      * @param {string} name - Name of country
+     * @param {CountryCoordinates} coordinates - coordinates of country
      * @throws Will throw an error if country have invalid coordinates
      * @throws Will throw an error if name length is bigger then NAME_MAX_LENGTH
      */
