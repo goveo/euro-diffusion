@@ -78,7 +78,7 @@ export class Country {
      */
     static parseCountryString(countryString: string): Country {
         const [name, ...coordinates] = countryString.split(' ');
-        const [xl, yl, xh, yh] = coordinates.map((coordinate) => parseInt(coordinate) - 1);
+        const [xl, yl, xh, yh] = coordinates.map((coordinate) => parseInt(coordinate));
         return new Country(name, { xl, yl, xh, yh } as CountryCoordinates);
     }
 }

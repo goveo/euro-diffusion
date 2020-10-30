@@ -4,22 +4,22 @@ import Country from './country';
 export const INITIAL_COINS_COUNT = 1000000;
 export const REPRESENTATIVE_PORTION = INITIAL_COINS_COUNT / 1000;
 
-type CoordsTuple = [x: number, y: number];
+type Coordinates = { x: number, y: number };
 
 class GridDictionary {
     private map = new Map<string, City>();
 
-    private key(p: CoordsTuple) {
-        return `${p[0]}-${p[1]}`;
+    private key(coords: Coordinates) {
+        return `${coords.x}-${coords.y}`;
     }
 
-    set(p: CoordsTuple, value: City) {
-        const key = this.key(p);
+    set(coords: Coordinates, value: City) {
+        const key = this.key(coords);
         this.map.set(key, value);
     }
 
-    get(p: CoordsTuple) {
-        const key = this.key(p);
+    get(coords: Coordinates) {
+        const key = this.key(coords);
         return this.map.get(key);
     }
 }
@@ -27,8 +27,11 @@ class GridDictionary {
 export class MapGrid {
     countries: Country[];
     countriesGrid = new GridDictionary();
-    width: number;
-    height: number;
+
+    minX: number;
+    minY: number;
+    maxX: number;
+    maxY: number;
 
     /**
      * Create a MapGrid
@@ -36,9 +39,19 @@ export class MapGrid {
      */
     constructor(countries: Country[]) {
         this.countries = countries;
-        this.width = 0;
-        this.height = 0;
-        this.setMapSize();
+        this.minX = 0;
+        this.minY = 0;
+        this.maxX = 0;
+        this.maxY = 0;
+
+        // find max/min coords
+        countries.forEach((country) => {
+            this.minX = Math.min(this.minX, country.coordinates.xl);
+            this.minY = Math.min(this.minY, country.coordinates.yl);
+            this.maxX = Math.max(this.maxX, country.coordinates.xh);
+            this.maxY = Math.max(this.maxY, country.coordinates.yh);
+        });
+
         this.addCitiesToCountries();
         this.addNeighborsToCities();
     }
@@ -52,33 +65,15 @@ export class MapGrid {
     }
 
     /**
-     * Find and set height and width of map-grid
-     */
-    setMapSize(): void {
-        const xCoords: number[] = [];
-        const yCoords: number[] = [];
-
-        this.countries.forEach((country) => {
-            xCoords.push(country.coordinates.xl, country.coordinates.xh);
-            yCoords.push(country.coordinates.yl, country.coordinates.yh);
-        });
-
-        this.width = Math.max(...xCoords) - Math.min(...xCoords) + 1;
-        this.height = Math.max(...yCoords) - Math.min(...yCoords) + 1;
-    }
-
-    /**
      * Create and set cities to countries
      */
     addCitiesToCountries(): void {
         const coinTypes = this.countries.map((country) => country.name);
         this.countries.forEach((country, countryIndex) => {
-            for (let i = 0; i < country.coordinates.xh - country.coordinates.xl + 1; i++) {
-                for (let j = 0; j < country.coordinates.yh - country.coordinates.yl + 1; j++) {
-                    const x = country.coordinates.xl + i;
-                    const y = country.coordinates.yl + j;
+            for (let x = country.coordinates.xl; x <= country.coordinates.xh; x += 1) {
+                for (let y = country.coordinates.yl; y <= country.coordinates.yh; y += 1) {
                     const city = new City(coinTypes, country.name, INITIAL_COINS_COUNT, REPRESENTATIVE_PORTION);
-                    this.countriesGrid.set([x, y], city);
+                    this.countriesGrid.set({ x, y }, city);
                     this.countries[countryIndex].addCity(city);
                 }
             }
@@ -89,41 +84,43 @@ export class MapGrid {
      * Fill neighbors array in cities
      */
     addNeighborsToCities(): void {
-        [...Array(this.width).keys()].forEach((x) => {
-            [...Array(this.height).keys()].forEach((y) => {
-                const city = this.countriesGrid.get([x, y]);
-                if (!city) return;
+        for (let x = 0; x <= this.maxX; x += 1) {
+            for (let y = 0; y <= this.maxY; y += 1) {
+                const city = this.countriesGrid.get({ x, y });
+                if (!city) {
+                    continue;
+                }
 
                 const neighbors: City[] = [];
 
                 const addNeighbor = (x: number, y: number) => {
-                    const city = this.countriesGrid.get([x, y]);
+                    const city = this.countriesGrid.get({ x, y });
                     if (city) {
                         neighbors.push(city);
                     }
                 };
 
-                if (x + 1 <= this.width) {
+                if (x + 1 <= this.maxX) {
                     addNeighbor(x + 1, y); // right neighbor
                 }
-                if (x - 1 >= 0) {
+                if (x - 1 >= this.minY) {
                     addNeighbor(x - 1, y); // left neighbor
                 }
-                if (y + 1 <= this.height) {
+                if (y + 1 <= this.maxY) {
                     addNeighbor(x, y + 1); // up neighbor
                 }
-                if (y - 1 >= 0) {
+                if (y - 1 >= this.minY) {
                     addNeighbor(x, y - 1); // down neighbor
                 }
 
                 city.neighbors = neighbors;
-            });
-        });
+            }
+        }
     }
 
     /**
      * Start emulation of euro diffusion
-     * @returns {Map<key, value>} Map, where
+     * @returns {Map<string, number>} Map, where
      *      key - name of country
      *      value - days of diffusion
      *
@@ -131,7 +128,7 @@ export class MapGrid {
     startDiffusionEmulation(): Map<string, number> {
         this.countriesGrid = new GridDictionary();
         const result = new Map<string, number>();
-        let days = 0;
+        let currentDay = 0;
 
         do {
             this.countries.forEach((country) => {
@@ -141,7 +138,7 @@ export class MapGrid {
 
                 if (country.isCompleted()) {
                     if (!result.has(country.name)) {
-                        result.set(country.name, days);
+                        result.set(country.name, currentDay);
                     }
                 }
             });
@@ -151,13 +148,13 @@ export class MapGrid {
                     city.updateCoins();
                 });
             });
-            days += 1;
+            currentDay += 1;
         } while (!this.isCompleted());
 
         // check if result have all countries
         this.countries.forEach((country) => {
             if (!result.has(country.name)) {
-                result.set(country.name, days);
+                result.set(country.name, currentDay);
             }
         });
 

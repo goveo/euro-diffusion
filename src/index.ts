@@ -53,7 +53,7 @@ const processCase = (countriesStrings: string[]) => {
             console.log(countryName, days);
         }
     } catch (error) {
-        console.error(`Error: ${error}`);
+        console.error(error.toString());
     }
 };
 

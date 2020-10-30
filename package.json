@@ -6,17 +6,24 @@
   "private": false,
   "scripts": {
     "build": "tsc",
-    "start": "npm run build && node ./dist/index.js"
+    "start": "npm run build && node ./dist/src/index.js",
+    "test": "jest"
   },
   "engines": {
     "node": "v12.16.1"
   },
   "devDependencies": {
-    "@types/node": "^14.14.2",
+    "@types/jest": "^26.0.15",
+    "@types/lodash": "^4.14.164",
+    "@types/node": "^14.14.6",
     "@typescript-eslint/eslint-plugin": "^4.5.0",
     "@typescript-eslint/parser": "^4.5.0",
     "eslint": "^7.12.0",
-    "typescript": "^4.0.3"
+    "jest": "^26.6.1",
+    "ts-jest": "^26.4.3",
+    "typescript": "^4.0.5"
   },
-  "dependencies": {}
+  "dependencies": {
+    "lodash": "^4.17.20"
+  }
 }
