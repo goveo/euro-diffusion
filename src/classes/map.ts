@@ -94,9 +94,9 @@ export class MapGrid {
                 const neighbors: City[] = [];
 
                 const addNeighbor = (x: number, y: number) => {
-                    const city = this.countriesGrid.get({ x, y });
-                    if (city) {
-                        neighbors.push(city);
+                    const neighborCity = this.countriesGrid.get({ x, y });
+                    if (neighborCity) {
+                        neighbors.push(neighborCity);
                     }
                 };
 
@@ -111,6 +111,10 @@ export class MapGrid {
                 }
                 if (y - 1 >= this.minY) {
                     addNeighbor(x, y - 1); // down neighbor
+                }
+
+                if (this.countries.length > 1 && !neighbors.length) {
+                    throw new Error(`City in ${city.countryName} has no neighbors`);
                 }
 
                 city.neighbors = neighbors;
