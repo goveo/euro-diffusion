@@ -84,8 +84,8 @@ export class MapGrid {
      * Fill neighbors array in cities
      */
     addNeighborsToCities(): void {
-        for (let x = 0; x <= this.maxX; x += 1) {
-            for (let y = 0; y <= this.maxY; y += 1) {
+        for (let x = this.minX; x <= this.maxX; x += 1) {
+            for (let y = this.minY; y <= this.maxY; y += 1) {
                 const city = this.countriesGrid.get({ x, y });
                 if (!city) {
                     continue;

@@ -11,6 +11,7 @@ export class Country {
     cities: City[];
     name: string;
     coordinates: CountryCoordinates;
+    static MIN_COORDINATE = 1;
     static MAX_COORDINATE = 10;
     static NAME_MAX_LENGTH = 25;
 
@@ -43,7 +44,7 @@ export class Country {
         };
 
         const isInBounds = (coordinate: number) => {
-            return ((coordinate >= 0) && (coordinate <= Country.MAX_COORDINATE));
+            return ((coordinate >= Country.MIN_COORDINATE) && (coordinate <= Country.MAX_COORDINATE));
         };
 
         return [isInBounds(xl),
