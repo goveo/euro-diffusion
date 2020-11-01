@@ -13,9 +13,7 @@ const processCase = (countriesStrings: string[]) => {
             countries.push(Country.parseCountryString(countryString));
         });
         const result = new MapGrid(countries).startDiffusionEmulation();
-        for (const [countryName, days] of result.entries()) {
-            console.log(countryName, days);
-        }
+        console.log(MapGrid.diffusionResultToString(result));
     } catch (error) {
         console.error(error.toString());
     }

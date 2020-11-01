@@ -127,7 +127,6 @@ export class MapGrid {
      * @returns {Map<string, number>} Map, where
      *      key - name of country
      *      value - days of diffusion
-     *
      */
     startDiffusionEmulation(): Map<string, number> {
         this.countriesGrid = new GridDictionary();
@@ -163,6 +162,19 @@ export class MapGrid {
         });
 
         return result;
+    }
+
+    /**
+     * Convert diffusion result map to string
+     * @param {Map<string, number>} diffusionResult
+     * @returns {string} string of diffusion result
+     */
+    static diffusionResultToString(diffusionResult: Map<string, number>): string {
+        const results = [];
+        for (const [countryName, days] of diffusionResult.entries()) {
+            results.push(`${countryName} ${days}`);
+        }
+        return results.join('\n');
     }
 }
 
