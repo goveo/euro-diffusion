@@ -22,6 +22,17 @@ test('Should throw an error if one country does not have neighbors', () => {
     ])).toThrow();
 });
 
+test('Should throw an error if creating country with wrong coordinates', () => {
+    expect(() => new MapGrid([
+        new Country('Test 1', { xl: 11, yl: 1, xh: 1, yh: 1 }),
+    ])).toThrow();
+
+    expect(() => new Country('Test 2', { xl: 2, yl: 1, xh: 1, yh: 1 })).toThrow();
+    expect(() => new Country('Test 3', { xl: -1, yl: 1, xh: 1, yh: 1 })).toThrow();
+    expect(() => new Country('Test 4', { xl: 1, yl: 1, xh: 3.4, yh: 4 })).toThrow();
+    expect(() => new Country('Test 4', { xl: 1, yl: 2, xh: 3, yh: NaN })).toThrow();
+});
+
 describe('Should work correctly with sample input', () => {
     test('Sample case 1', () => {
         const diffusionResult = new MapGrid([

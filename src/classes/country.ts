@@ -43,14 +43,15 @@ export class Country {
             return low <= high;
         };
 
-        const isInBounds = (coordinate: number) => {
+        const isIntegerInBounds = (coordinate: number) => {
+            if (!Number.isInteger(coordinate)) return false;
             return ((coordinate >= Country.MIN_COORDINATE) && (coordinate <= Country.MAX_COORDINATE));
         };
 
-        return [isInBounds(xl),
-            isInBounds(yl),
-            isInBounds(xh),
-            isInBounds(yh),
+        return [isIntegerInBounds(xl),
+            isIntegerInBounds(yl),
+            isIntegerInBounds(xh),
+            isIntegerInBounds(yh),
             isCorrectLowHighRange(xl, xh),
             isCorrectLowHighRange(yl, yh)]
             .every((result) => result === true);
