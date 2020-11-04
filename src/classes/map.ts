@@ -100,16 +100,16 @@ export class MapGrid {
                     }
                 };
 
-                if (x + 1 <= this.maxX) {
+                if (x < this.maxX) {
                     addNeighbor(x + 1, y); // right neighbor
                 }
-                if (x - 1 >= this.minY) {
+                if (x > this.minY) {
                     addNeighbor(x - 1, y); // left neighbor
                 }
-                if (y + 1 <= this.maxY) {
+                if (y < this.maxY) {
                     addNeighbor(x, y + 1); // up neighbor
                 }
-                if (y - 1 >= this.minY) {
+                if (y > this.minY) {
                     addNeighbor(x, y - 1); // down neighbor
                 }
 
